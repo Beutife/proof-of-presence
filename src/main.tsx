@@ -5,7 +5,6 @@ import App from './App.tsx'
 
 import '@rainbow-me/rainbowkit/styles.css';
 import {
-  getDefaultWallets,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
