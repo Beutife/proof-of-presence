@@ -21,6 +21,15 @@ const WalletConnect = () => {
           (!authenticationStatus ||
             authenticationStatus === 'authenticated');
 
+        // Debug logging
+        console.log('WalletConnect state:', { 
+          ready, 
+          connected, 
+          account: account?.address, 
+          chain: chain?.name,
+          authenticationStatus 
+        });
+
         return (
           <div
             {...(!ready && {
@@ -38,7 +47,7 @@ const WalletConnect = () => {
                   <button
                     onClick={openConnectModal}
                     type="button"
-                    className="bg-black text-black px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
                   >
                     Connect Wallet
                   </button>
@@ -63,7 +72,7 @@ const WalletConnect = () => {
                   <button
                     onClick={openChainModal}
                     type="button"
-                    className="flex items-center bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+                    className="flex items-center bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
                   >
                     {chain?.hasIcon && (
                       <div
@@ -92,7 +101,7 @@ const WalletConnect = () => {
                   <button
                     onClick={openAccountModal}
                     type="button"
-                    className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+                    className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
                   >
                     {account?.displayName}
                     {account?.displayBalance

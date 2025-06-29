@@ -11,29 +11,21 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
 import {
   mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  base,
-  zora,
+  sepolia,
 } from 'wagmi/chains';
 import { http, createConfig } from 'wagmi';
-import { injected, metaMask, walletConnect } from 'wagmi/connectors';
+import { metaMask, walletConnect } from 'wagmi/connectors';
+import { WalletProvider } from './context/WalletContext';
 
 const config = createConfig({
-  chains: [mainnet, polygon, optimism, arbitrum, base, zora],
+  chains: [mainnet, sepolia],
   connectors: [
-    injected(),
     metaMask(),
-    walletConnect({ projectId: 'YOUR_PROJECT_ID' }),
+    walletConnect({ projectId: 'c4f79cc821944d9680842e34466bfbd9' }),
   ],
   transports: {
     [mainnet.id]: http(),
-    [polygon.id]: http(),
-    [optimism.id]: http(),
-    [arbitrum.id]: http(),
-    [base.id]: http(),
-    [zora.id]: http(),
+    [sepolia.id]: http(),
   },
 });
 
@@ -44,7 +36,9 @@ createRoot(document.getElementById('root')!).render(
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          <App />
+          <WalletProvider>
+            <App />
+          </WalletProvider>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

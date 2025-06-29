@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import ethLogo from '../assets/eth.png';
 
 function Footer() {
   return (
@@ -40,7 +41,7 @@ function Footer() {
             <div className="flex items-center space-x-3 mb-4">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full blur-md opacity-50"></div>
-                <img src="/logo.png" alt="Logo" className="relative w-10 h-10 rounded-full border-2 border-white/80 shadow-lg" />
+                <img src={ethLogo} alt="Logo" className="relative w-10 h-10 rounded-full border-2 border-white/80 shadow-lg" />
               </div>
               <div>
                 <h3 className="text-xl font-bold bg-gradient-to-r from-white to-purple-100 bg-clip-text text-transparent">
@@ -141,7 +142,7 @@ function Footer() {
           {/* Tech stack */}
           <div className="flex items-center space-x-4 mb-4 md:mb-0">
             <div className="flex items-center space-x-2 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
-              <img src="/ethereum.png" alt="Ethereum" className="w-4 h-4" />
+              <img src={ethLogo} alt="Ethereum" className="w-4 h-4" />
               <span className="text-xs text-white/80 font-medium">Ethereum</span>
             </div>
             <div className="flex items-center space-x-2 px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">

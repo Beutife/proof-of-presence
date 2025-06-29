@@ -1,18 +1,102 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ethers } from 'ethers';
+import { encodeFunctionData } from 'viem';
+import { useWallet } from '../context/WalletContext';
 
 // Sample contract ABI (replace with actual ABI)
 const contractABI = [
-  {
-    inputs: [{ name: 'message', type: 'string' }],
-    name: 'logMessage',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-];
-const contractAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with deployed contract address
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_content",
+				"type": "string"
+			}
+		],
+		"name": "logMessage",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "content",
+				"type": "string"
+			}
+		],
+		"name": "MessageLogged",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "getMessages",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "messages",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "content",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
+const contractAddress = '0x4f98049cdb53571d922b1a4860d20a8a0ffc995b'; 
 
 interface MessageInputProps {
   onMessageSubmitted?: () => void; // Callback to refresh messages
@@ -23,66 +107,15 @@ function MessageInput({ onMessageSubmitted }: MessageInputProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [walletConnected, setWalletConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [charCount, setCharCount] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
 
+  const { address, isConnected, walletClient, publicClient } = useWallet();
+
+  // Debug logging
+  console.log('Wallet state:', { address, isConnected, walletClient: !!walletClient, publicClient: !!publicClient });
+
   const MAX_MESSAGE_LENGTH = 280; 
-  // Check wallet connection on mount
-  useEffect(() => {
-    checkWalletConnection();
-  }, []);
-
-  // Listen for wallet changes
-  useEffect(() => {
-    if (window.ethereum) {
-      const handleAccountsChanged = (accounts: string[]) => {
-        setWalletAddress(accounts[0] || null);
-        setWalletConnected(accounts.length > 0);
-      };
-
-      window.ethereum.on('accountsChanged', handleAccountsChanged);
-      return () => {
-        window.ethereum?.removeListener('accountsChanged', handleAccountsChanged);
-      };
-    }
-  }, []);
-
-  const checkWalletConnection = async () => {
-    if (!window.ethereum) {
-      setError('Please install MetaMask or another Web3 wallet');
-      return;
-    }
-
-    try {
-      const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-      setWalletAddress(accounts[0] || null);
-      setWalletConnected(accounts.length > 0);
-    } catch (error) {
-      console.error('Error checking wallet connection:', error);
-    }
-  };
-
-  const connectWallet = async () => {
-    if (!window.ethereum) {
-      setError('Please install MetaMask or another Web3 wallet');
-      return;
-    }
-
-    try {
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      setWalletAddress(accounts[0] || null);
-      setWalletConnected(accounts.length > 0);
-      setError(null);
-    } catch (error: any) {
-      if (error.code === 4001) {
-        setError('Wallet connection rejected');
-      } else {
-        setError('Failed to connect wallet');
-      }
-    }
-  };
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -103,13 +136,8 @@ function MessageInput({ onMessageSubmitted }: MessageInputProps) {
       return;
     }
 
-    if (!walletConnected) {
+    if (!isConnected || !walletClient) {
       setError('Please connect your wallet first');
-      return;
-    }
-
-    if (!window.ethereum) {
-      setError('Please install MetaMask or another Web3 wallet');
       return;
     }
 
@@ -118,22 +146,31 @@ function MessageInput({ onMessageSubmitted }: MessageInputProps) {
     setSuccess(false);
 
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, contractABI, signer);
-      
-      // Estimate gas first
-      const gasEstimate = await contract.logMessage.estimateGas(message);
-      
+      // Encode the function call
+      const data = encodeFunctionData({
+        abi: contractABI,
+        functionName: 'logMessage',
+        args: [message]
+      });
+
+      // Estimate gas
+      const gasEstimate = await publicClient.estimateGas({
+        account: address as `0x${string}`,
+        to: contractAddress as `0x${string}`,
+        data
+      });
+
       // Submit transaction
-      const tx = await contract.logMessage(message, {
-        gasLimit: (gasEstimate * 120n) / 100n // Add 20% buffer using BigInt arithmetic
+      const hash = await walletClient.sendTransaction({
+        to: contractAddress as `0x${string}`,
+        data,
+        gas: (gasEstimate * 120n) / 100n // Add 20% buffer
       });
 
       // Wait for confirmation
-      const receipt = await tx.wait();
+      const receipt = await publicClient.waitForTransactionReceipt({ hash });
       
-      if (receipt.status === 1) {
+      if (receipt.status === 'success') {
         setSuccess(true);
         setMessage('');
         setCharCount(0);
@@ -219,7 +256,7 @@ function MessageInput({ onMessageSubmitted }: MessageInputProps) {
               
               <div className="relative z-10">
                 {/* Wallet connection status */}
-                {!walletConnected ? (
+                {!isConnected ? (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -230,12 +267,9 @@ function MessageInput({ onMessageSubmitted }: MessageInputProps) {
                         <div className="w-3 h-3 bg-red-400 rounded-full animate-pulse"></div>
                         <span className="text-red-200 font-medium">Wallet not connected</span>
                       </div>
-                      <button
-                        onClick={connectWallet}
-                        className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium rounded-lg hover:scale-105 transition-transform duration-200"
-                      >
-                        Connect Wallet
-                      </button>
+                      <span className="text-sm text-gray-300">
+                        Use the wallet connect button in the header
+                      </span>
                     </div>
                   </motion.div>
                 ) : (
@@ -250,7 +284,7 @@ function MessageInput({ onMessageSubmitted }: MessageInputProps) {
                         <span className="text-green-200 font-medium">Wallet connected</span>
                       </div>
                       <span className="text-sm text-gray-300 font-mono">
-                        {walletAddress?.slice(0, 6)}...{walletAddress?.slice(-4)}
+                        {address?.slice(0, 6)}...{address?.slice(-4)}
                       </span>
                     </div>
                   </motion.div>
@@ -301,7 +335,7 @@ function MessageInput({ onMessageSubmitted }: MessageInputProps) {
                     className="w-full p-4 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 resize-none"
                     rows={4}
                     maxLength={MAX_MESSAGE_LENGTH}
-                    disabled={loading || !walletConnected}
+                    disabled={loading || !isConnected}
                   />
                   
                   {/* Character counter */}
@@ -328,12 +362,12 @@ function MessageInput({ onMessageSubmitted }: MessageInputProps) {
                 {/* Submit button */}
                 <motion.button
                   onClick={submitMessage}
-                  disabled={loading || !walletConnected || !message.trim()}
-                  whileHover={{ scale: walletConnected && message.trim() ? 1.02 : 1 }}
-                  whileTap={{ scale: walletConnected && message.trim() ? 0.98 : 1 }}
+                  disabled={loading || !isConnected || !message.trim()}
+                  whileHover={{ scale: isConnected && message.trim() ? 1.02 : 1 }}
+                  whileTap={{ scale: isConnected && message.trim() ? 0.98 : 1 }}
                   className={`
                     w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300
-                    ${walletConnected && message.trim() && !loading
+                    ${isConnected && message.trim() && !loading
                       ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:shadow-lg hover:shadow-purple-500/25'
                       : 'bg-gray-700 text-gray-400 cursor-not-allowed'
                     }

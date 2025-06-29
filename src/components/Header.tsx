@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import WalletConnect from './WalletConnect';
+import ethLogo from '../assets/eth.png';
 
 function Header() {
   return (
@@ -38,7 +39,7 @@ function Header() {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full blur-md opacity-50 animate-pulse"></div>
             <img 
-              src="/logo.png" 
+              src={ethLogo} 
               alt="Logo" 
               className="relative w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-white/80 shadow-lg shrink-0 hover:scale-110 transition-transform duration-300" 
             />
