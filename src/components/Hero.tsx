@@ -97,7 +97,7 @@ function Hero() {
             whileTap={{ scale: 0.95 }}
             className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-purple-400/30"
           >
-            Start Writing
+            <a href="./MessageInput.tsx">Start Writing</a>
           </motion.button>
           
           <motion.button
@@ -105,7 +105,7 @@ function Hero() {
             whileTap={{ scale: 0.95 }}
             className="px-8 py-4 bg-transparent border-2 border-blue-400/50 text-blue-400 font-bold text-lg rounded-full hover:bg-blue-500/10 transition-all duration-300"
           >
-            View Messages
+            <a href="./MessageDisplay.tsx">View Messages</a>
           </motion.button>
         </motion.div>
 
