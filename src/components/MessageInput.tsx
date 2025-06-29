@@ -213,7 +213,7 @@ function MessageInput({ onMessageSubmitted }: MessageInputProps) {
   };
 
   return (
-    <div className="relative max-w-4xl mx-auto">
+    <div id="message-input" className="relative max-w-4xl mx-auto">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse"></div>

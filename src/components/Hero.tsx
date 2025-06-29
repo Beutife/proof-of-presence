@@ -1,6 +1,23 @@
 import { motion } from 'framer-motion';
+import { useEffect } from 'react';
+import MessageInput from './MessageInput';
+import MessageDisplay from './MessageDisplay';
 
 function Hero() {
+  const scrollToMessageInput = () => {
+    const element = document.getElementById('message-input');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const scrollToMessageDisplay = () => {
+    const element = document.getElementById('message-display');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Animated background elements - matching MessageDisplay */}
@@ -96,6 +113,7 @@ function Hero() {
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
             className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-purple-400/30"
+            onClick={scrollToMessageInput}
           >
             <a href="./MessageInput.tsx">Start Writing</a>
           </motion.button>
@@ -104,6 +122,7 @@ function Hero() {
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
             className="px-8 py-4 bg-transparent border-2 border-blue-400/50 text-blue-400 font-bold text-lg rounded-full hover:bg-blue-500/10 transition-all duration-300"
+            onClick={scrollToMessageDisplay}
           >
             <a href="./MessageDisplay.tsx">View Messages</a>
           </motion.button>

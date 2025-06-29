@@ -50,7 +50,7 @@ function MessageDisplay() {
   }, []); // This will now refresh when the component key changes
 
   return (
-    <div className="relative min-h-screen">
+    <div id="message-display" className="relative min-h-screen">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse"></div>
