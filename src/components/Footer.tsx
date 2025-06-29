@@ -64,9 +64,9 @@ function Footer() {
             <h4 className="text-white font-semibold mb-4 text-lg">Quick Links</h4>
             <ul className="space-y-3">
               {[
-                { name: 'Write Message', href: '#write' },
-                { name: 'View Messages', href: '#explore' },
-                { name: 'How It Works', href: '#about' },
+                { name: 'Write Message', href: './MessageInput.tsx' },
+                { name: 'View Messages', href: './MessageDisplay.tsx' },
+                { name: 'How It Works', href: '#home' },
                 { name: 'Smart Contract', href: '#contract' }
               ].map((link, index) => (
                 <motion.li
@@ -96,7 +96,7 @@ function Footer() {
             <h4 className="text-white font-semibold mb-4 text-lg">Connect</h4>
             <div className="space-y-3">
               <a 
-                href="https://github.com/your-repo"
+                href="https://github.com/Beutife/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors duration-300 group"
@@ -107,7 +107,7 @@ function Footer() {
                 <span className="text-sm">GitHub</span>
               </a>
               <a 
-                href="https://twitter.com/your-handle"
+                href="https://twitter.com/b_udepeter"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors duration-300 group"
@@ -118,7 +118,7 @@ function Footer() {
                 <span className="text-sm">Twitter</span>
               </a>
               <a 
-                href="https://discord.gg/your-server"
+                href="https://discord.gg/beutech"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors duration-300 group"
