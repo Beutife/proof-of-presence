@@ -72,7 +72,7 @@ const WalletConnect = () => {
                   <button
                     onClick={openChainModal}
                     type="button"
-                    className="flex items-center bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+                    className="flex items-center bg-gray-800 text-black px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
                   >
                     {chain?.hasIcon && (
                       <div
@@ -101,7 +101,7 @@ const WalletConnect = () => {
                   <button
                     onClick={openAccountModal}
                     type="button"
-                    className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+                    className="bg-gray-800 text-black px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
                   >
                     {account?.displayName}
                     {account?.displayBalance
