@@ -1,69 +1,81 @@
-# React + TypeScript + Vite
+# Proof of Presence (PoP) dApp
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Proof of Presence (PoP) is a decentralized application (dApp) built on Ethereum, enabling users to record and verify their presence at events using blockchain technology. This project leverages Remix IDE for smart contract development and a React-based frontend with RainbowKit and Wagmi for seamless wallet integration and user interaction.
 
-Currently, two official plugins are available:
+## Table of Contents
+- [Overview](#overview)
+- [Smart Contract Development](#smart-contract-development)
+- [Frontend Setup](#frontend-setup)
+- [Installation and Usage](#installation-and-usage)
+- [Technologies Used](#technologies-used)
+- [Contributing](#contributing)
+- [License](#license)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Overview
+The PoP dApp allows users to submit proof of their presence at an event via a message stored on-chain. The smart contract, deployed using Remix IDE, handles message storage and verification, while the frontend, built with React, provides a user-friendly interface with wallet connectivity via RainbowKit and Wagmi.
 
-## Expanding the ESLint configuration
+## Smart Contract Development
+The PoP smart contract was developed and deployed using **Remix IDE**, a powerful tool for Ethereum smart contract development. Key steps included:
+1. **Writing the Contract**: Created a Solidity smart contract (`Presence.sol`) to store user messages and timestamps on the Ethereum blockchain.
+   ```solidity
+   // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+contract ProofOfPresence {
+    struct Message {
+        address sender;
+        uint256 timestamp;
+        string content;
+    }
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+    Message[] public messages;
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+    event MessageLogged(address indexed sender, uint256 timestamp, string content);
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+    function logMessage(string calldata _content) external {
+        messages.push(Message(msg.sender, block.timestamp, _content));
+        emit MessageLogged(msg.sender, block.timestamp, _content);
+    }
+
+    function getMessages() external view returns (address[] memory, uint256[] memory, string[] memory) {
+        address[] memory senders = new address[](messages.length);
+        uint256[] memory timestamps = new uint256[](messages.length);
+        string[] memory contents = new string[](messages.length);
+
+        for (uint256 i = 0; i < messages.length; i++) {
+            senders[i] = messages[i].sender;
+            timestamps[i] = messages[i].timestamp;
+            contents[i] = messages[i].content;
+        }
+
+        return (senders, timestamps, contents);
+    }
+} 
+```
+```
+2. **Testing**: Used Remix IDE’s testing environment to simulate contract interactions, ensuring accurate message storage and retrieval.
+
+3. **Deployment**: Deployed the contract to a testnet Sepolia via Remix IDE’s integrated deployment tools, using MetaMask for transaction signing.
+
+4. **Debugging**: Leveraged Remix IDE’s debugging tools to troubleshoot and optimize gas usage.
+
+# Frontend Setup
+
+The frontend was developed in VS Code using React.js for a responsive user interface. 
+
+### Key components include:
+
+1. **Wallet Integration**: Integrated RainbowKit for wallet connectivity and Wagmi for interacting with the smart contract’s recordPresence and getPresence functions.
+
+2. **UI Components**: Designed a form for users to input their presence message, with Tailwind CSS for styling.
+
+3. **Contract Interaction**: Used Wagmi hooks to call the smart contract, enabling users to submit messages and view their recorded presence.
+
+# Installation and Usage
+
+Clone the Repository:
+```
+git clone https://github.com/beutife/proof-of-presence.git
+cd proof-of-presence
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
