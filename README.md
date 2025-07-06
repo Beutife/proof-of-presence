@@ -20,7 +20,6 @@ The PoP smart contract was developed and deployed using **Remix IDE**, a powerfu
    ```solidity
    // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-
 contract ProofOfPresence {
     struct Message {
         address sender;
@@ -51,8 +50,7 @@ contract ProofOfPresence {
         return (senders, timestamps, contents);
     }
 } 
-```
-```
+``` `
 2. **Testing**: Used Remix IDE’s testing environment to simulate contract interactions, ensuring accurate message storage and retrieval.
 
 3. **Deployment**: Deployed the contract to a testnet Sepolia via Remix IDE’s integrated deployment tools, using MetaMask for transaction signing.
@@ -105,6 +103,9 @@ npm start
 2. Create a branch (git checkout -b feature/update-docs).
 3. Commit changes (git commit -m "Updated README with new section").
 4. Submit a pull request.
+
+## License
+MIT License (LICENSE)
 
 
 
