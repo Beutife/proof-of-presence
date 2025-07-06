@@ -49,9 +49,7 @@ The PoP smart contract was developed and deployed using **Remix IDE**, a powerfu
 
         return (senders, timestamps, contents);
     }
-   } 
-```
-```
+   } ```
 
 2. **Testing**: Used Remix IDE’s testing environment to simulate contract interactions, ensuring accurate message storage and retrieval.
 
