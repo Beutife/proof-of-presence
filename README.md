@@ -19,13 +19,13 @@ The PoP smart contract was developed and deployed using **Remix IDE**, a powerfu
 1. **Writing the Contract**: Created a Solidity smart contract (`Presence.sol`) to store user messages and timestamps on the Ethereum blockchain.
    ```solidity
    // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-contract ProofOfPresence {
-    struct Message {
-        address sender;
-        uint256 timestamp;
-        string content;
-    }
+   pragma solidity ^0.8.0;
+   contract ProofOfPresence {
+       struct Message {
+           address sender;
+           uint256 timestamp;
+           string content;
+       }
 
     Message[] public messages;
 
@@ -50,7 +50,9 @@ contract ProofOfPresence {
         return (senders, timestamps, contents);
     }
 } 
-``` `
+```
+```
+
 2. **Testing**: Used Remix IDE’s testing environment to simulate contract interactions, ensuring accurate message storage and retrieval.
 
 3. **Deployment**: Deployed the contract to a testnet Sepolia via Remix IDE’s integrated deployment tools, using MetaMask for transaction signing.
