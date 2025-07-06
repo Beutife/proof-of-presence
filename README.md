@@ -73,9 +73,41 @@ The frontend was developed in VS Code using React.js for a responsive user inter
 
 # Installation and Usage
 
-Clone the Repository:
+### Clone the Repository:
 ```
-git clone https://github.com/beutife/proof-of-presence.git
+git clone https://github.com/Beutife/proof-of-presence.git
 cd proof-of-presence
 ```
+### Install Dependencies:
+```
+npm install
+```
+### Deploy the Smart Contract:
+
+1. Open Remix IDE (https://remix.ethereum.org).
+2. Import Presence.sol from the contracts/ folder.
+3. Compile and deploy to a testnet (e.g., Sepolia) using Remix IDE.
+
+#### Run the Frontend:
+```
+npm start
+```
+## Technologies Used
+
+1. Smart Contract: Solidity, Remix IDE, Ethereum (Sepolia Testnet)
+2. Frontend: React.js, RainbowKit, Wagmi, Tailwind CSS
+3. Tools: VS Code, GitHub, Markdown
+4. Wallet: MetaMask
+
+## Contributions are welcome! To contribute:
+
+1. Fork the repository.
+2. Create a branch (git checkout -b feature/update-docs).
+3. Commit changes (git commit -m "Updated README with new section").
+4. Submit a pull request.
+
+
+
+
+
 
