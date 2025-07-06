@@ -49,7 +49,7 @@ The PoP smart contract was developed and deployed using **Remix IDE**, a powerfu
 
         return (senders, timestamps, contents);
     }
-} 
+   } 
 ```
 ```
 
